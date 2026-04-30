@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>TES Ceiling Attach</Name>
+    <Assembly>C:\ProgramData\TES\CeilingAttach\AttachToCeiling.dll</Assembly>
+    <AddInId>5A897679-D236-41D3-921E-E9B62B6ABDBD</AddInId>
+    <VendorId>TES</VendorId>
+    <VendorDescription>TES CeilingAttach</VendorDescription>
+    <Description>This add-in adds a custom ribbon tab with a button to run the TES application.</Description>
+    <FullClassName>CeilingAttach.App</FullClassName>
+  </AddIn>
+</RevitAddIns>
