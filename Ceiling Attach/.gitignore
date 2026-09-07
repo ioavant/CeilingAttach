@@ -362,7 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Branding engine — generated at build time, never commit
-Ceiling Attach/Properties/BrandInfo.cs
-Ceiling Attach/Properties/VersionInfo.cs
-Installer/brand.generated.wxi
+# Claude Code — local session data and worktrees
+.claude/

@@ -1,0 +1,120 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    One net48 assembly for Revit 2022-2026. The add-in uses no version-specific
+    API, so it is compiled against the OLDEST supported release.
+
+    Brand is a build-time property - see ..\branding.props and ..\..\_branding:
+
+        dotnet build -p:Brand=Tes
+        dotnet build -p:Brand=Vixeldorf   (default)
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>Library</OutputType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <UseWPF>true</UseWPF>
+    <Deterministic>true</Deterministic>
+
+    <!-- Brand-dependent: CeilingAttach.dll / CeilingAttach.TES.dll. RootNamespace
+         stays put, so embedded resources keep their brand-neutral names either way. -->
+    <RootNamespace>CeilingAttach</RootNamespace>
+    <AssemblyName>$(BrandAssemblyName)</AssemblyName>
+
+    <!-- Brand-scoped so both brands can be built back to back without clobbering. -->
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>bin\$(Configuration)\$(Brand)\</OutputPath>
+
+    <!-- Assembly attributes come from the generated BrandInfo.cs / VersionInfo.cs;
+         letting the SDK emit its own set as well is a duplicate-attribute error. -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <!-- Revit loads the add-in itself; never produce or ship an app.config. -->
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RevitApiVersion Condition=" '$(RevitApiVersion)' == '' ">2022</RevitApiVersion>
+    <AutodeskRoot Condition=" '$(AutodeskRoot)' == '' ">$(ProgramW6432)\Autodesk</AutodeskRoot>
+    <AutodeskRoot Condition=" !Exists('$(AutodeskRoot)') ">$(ProgramFiles)\Autodesk</AutodeskRoot>
+    <RevitApiDir>$(AutodeskRoot)\Revit $(RevitApiVersion)</RevitApiDir>
+  </PropertyGroup>
+
+  <Target Name="VerifyRevitApiPresent" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition=" !Exists('$(RevitApiDir)\RevitAPI.dll') "
+           Text="Revit $(RevitApiVersion) API not found at '$(RevitApiDir)'. Install Revit $(RevitApiVersion), or override with -p:RevitApiVersion=&lt;year&gt; / -p:AutodeskRoot=&lt;path&gt;." />
+  </Target>
+
+  <ItemGroup>
+    <!-- Private=false: these ship with Revit and must never be copied next to the add-in. -->
+    <Reference Include="RevitAPI">
+      <HintPath>$(RevitApiDir)\RevitAPI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI">
+      <HintPath>$(RevitApiDir)\RevitAPIUI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- Autodesk.Windows: unofficial but long-stable ribbon model, used by App.cs
+         to find and reposition the shared "About" panel. -->
+    <Reference Include="AdWindows">
+      <HintPath>$(RevitApiDir)\AdWindows.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Both are generated before CoreCompile and are git-ignored, so they may
+         not exist when the default glob runs on a clean clone. Listing them
+         explicitly makes the first build work; the Remove keeps the glob from
+         adding a duplicate on every build after that. -->
+    <Compile Remove="Properties\BrandInfo.cs;Properties\VersionInfo.cs" />
+    <Compile Include="Properties\BrandInfo.cs" />
+    <Compile Include="Properties\VersionInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Product artwork. Brand artwork (web_icon.png) is contributed per brand
+         by _branding\Branding.targets with a brand-neutral logical name, so it
+         must not appear here — two EmbeddedResource items with the same logical
+         name would produce a duplicate manifest resource. -->
+    <EmbeddedResource Include="Resources\*.png" Exclude="Resources\web_icon.png" />
+    <None Include="..\version.json" />
+  </ItemGroup>
+
+  <!-- =================================================================== -->
+  <!-- Single source of truth for the version: ..\version.json             -->
+  <!-- =================================================================== -->
+  <PropertyGroup>
+    <VersionJsonFile>$(MSBuildProjectDirectory)\..\version.json</VersionJsonFile>
+    <GeneratedVersionFile>$(MSBuildProjectDirectory)\Properties\VersionInfo.cs</GeneratedVersionFile>
+  </PropertyGroup>
+
+  <Target Name="GenerateVersionInfo" BeforeTargets="CoreCompile" Inputs="$(VersionJsonFile)" Outputs="$(GeneratedVersionFile)">
+    <ReadLinesFromFile File="$(VersionJsonFile)">
+      <Output TaskParameter="Lines" ItemName="VersionJsonLines" />
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <VersionJsonText>@(VersionJsonLines, '')</VersionJsonText>
+      <ProductVersion>$([System.Text.RegularExpressions.Regex]::Replace($(VersionJsonText), '(?s)^.*?&quot;version&quot;\s*:\s*&quot;([^&quot;]+)&quot;.*$', '$1'))</ProductVersion>
+    </PropertyGroup>
+    <Error Condition="'$(ProductVersion)' == '' or '$(ProductVersion)' == '$(VersionJsonText)'" Text="Could not read 'version' from version.json" />
+    <ItemGroup>
+      <VersionInfoLines Include="// &lt;auto-generated&gt; — generated from version.json by the GenerateVersionInfo target. Do not edit." />
+      <VersionInfoLines Include="using System.Reflection%3B" />
+      <VersionInfoLines Include="[assembly: AssemblyVersion(&quot;$(ProductVersion)&quot;)]" />
+      <VersionInfoLines Include="[assembly: AssemblyFileVersion(&quot;$(ProductVersion)&quot;)]" />
+    </ItemGroup>
+    <WriteLinesToFile File="$(GeneratedVersionFile)" Lines="@(VersionInfoLines)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <Message Importance="high" Text="Ceiling Attach version stamped from version.json: $(ProductVersion)" />
+  </Target>
+
+</Project>

@@ -1,0 +1,81 @@
+<Project>
+
+  <!--
+    Ceiling Attach — product side of the branding configuration.
+
+    What a BRAND is (ribbon tab, About button, help URL, installer artwork,
+    update policy) lives in ..\_branding\<Brand>\brand.props and is shared by
+    every add-in. This file only describes THIS product, plus the handful of
+    values that legitimately differ per brand for it.
+
+    Switch brands with:  dotnet build -p:Brand=Tes     (or -p:Brand=Vixeldorf)
+  -->
+
+  <PropertyGroup>
+    <BrandProduct>CeilingAttach</BrandProduct>
+    <BrandProductDisplayName>Ceiling Attach</BrandProductDisplayName>
+    <BrandProductDescription>Attach MEP elements and spaces to the nearest floor or roof slab above them.</BrandProductDescription>
+
+    <!-- Namespace the generated Brand class is emitted into. -->
+    <BrandInfoNamespace>CeilingAttach</BrandInfoNamespace>
+    <!-- IExternalApplication class the .addin manifests point at. -->
+    <BrandAppClassName>CeilingAttach.App</BrandAppClassName>
+
+    <BrandSupportedRevitVersions>2022;2023;2024;2025;2026</BrandSupportedRevitVersions>
+
+    <!-- The add-in project folder; the engine derives the built DLL path from it. -->
+    <BrandProjectDir>$(MSBuildThisFileDirectory)Ceiling Attach\</BrandProjectDir>
+
+    <!-- Auto-generated per install location, so each brand gets its own. -->
+    <BrandCoreFilesGuid>*</BrandCoreFilesGuid>
+  </PropertyGroup>
+
+  <!-- ================================================================= -->
+  <!-- TES — the build already in the field.                              -->
+  <!--                                                                    -->
+  <!-- UpgradeCode and AddInId are lifted verbatim from the shipped        -->
+  <!-- Installer\Product.wxs and Installer\CeilingAttach_22.addin.         -->
+  <!-- They must never change.                                             -->
+  <!--                                                                    -->
+  <!-- The per-version component GUIDs are regenerated: the manifests they -->
+  <!-- carry are renamed (CeilingAttach_22.addin -> TES_CeilingAttach_22  -->
+  <!-- .addin), and Windows Installer component rules require a new GUID   -->
+  <!-- whenever a component's keypath changes.                             -->
+  <!-- ================================================================= -->
+  <PropertyGroup Condition=" '$(Brand)' == 'Tes' ">
+    <!-- All TES add-ins share one "Tools" panel on the TES tab. -->
+    <BrandRibbonPanel>Tools</BrandRibbonPanel>
+
+    <BrandUpgradeCode>DE5C7154-0183-4C78-BAC7-8F8D97E7D5A3</BrandUpgradeCode>
+    <BrandAddInId>5A897679-D236-41D3-921E-E9B62B6ABDBD</BrandAddInId>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(Brand)' == 'Tes' ">
+    <BrandAddinComponent Include="2022"><Guid>A6843849-4186-469B-B956-A17846F76E81</Guid></BrandAddinComponent>
+    <BrandAddinComponent Include="2023"><Guid>9E1556DB-9ADB-4963-A394-057A6F9945D5</Guid></BrandAddinComponent>
+    <BrandAddinComponent Include="2024"><Guid>5960503E-3A0B-404C-8A9E-02A6546BF0B7</Guid></BrandAddinComponent>
+    <BrandAddinComponent Include="2025"><Guid>86FCF0E2-C71B-490D-ABB2-EAF18358680D</Guid></BrandAddinComponent>
+    <BrandAddinComponent Include="2026"><Guid>2A22EDBD-3B68-446A-90F5-43A700BE2B51</Guid></BrandAddinComponent>
+  </ItemGroup>
+
+  <!-- ================================================================= -->
+  <!-- Vixeldorf — fresh GUIDs, never shared with TES or any other        -->
+  <!-- product, so the two MSIs install side by side.                     -->
+  <!-- ================================================================= -->
+  <PropertyGroup Condition=" '$(Brand)' == 'Vixeldorf' ">
+    <!-- Vixeldorf products each get their own panel on the shared tab. -->
+    <BrandRibbonPanel>Ceiling Attach</BrandRibbonPanel>
+
+    <BrandUpgradeCode>38431457-5580-46CE-BD0D-15A832B134F7</BrandUpgradeCode>
+    <BrandAddInId>0831EB26-3F68-45CA-B2AB-12A6AE76B46F</BrandAddInId>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(Brand)' == 'Vixeldorf' ">
+    <BrandAddinComponent Include="2022"><Guid>48811DEE-4920-4CFA-B9B2-4F57AA249E49</Guid></BrandAddinComponent>
+    <BrandAddinComponent Include="2023"><Guid>07062EA0-19D7-4769-90F5-542151134DF5</Guid></BrandAddinComponent>
+    <BrandAddinComponent Include="2024"><Guid>002B1DBE-5155-4A3B-9FCE-A0E24499C4BE</Guid></BrandAddinComponent>
+    <BrandAddinComponent Include="2025"><Guid>49381235-E5F3-43AD-8FE2-7DA84DE97196</Guid></BrandAddinComponent>
+    <BrandAddinComponent Include="2026"><Guid>16B5166D-F38F-450A-A914-5E641DC504A3</Guid></BrandAddinComponent>
+  </ItemGroup>
+
+</Project>
