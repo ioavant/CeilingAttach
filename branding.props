@@ -21,7 +21,7 @@
     <!-- IExternalApplication class the .addin manifests point at. -->
     <BrandAppClassName>CeilingAttach.App</BrandAppClassName>
 
-    <BrandSupportedRevitVersions>2022;2023;2024;2025;2026</BrandSupportedRevitVersions>
+    <BrandSupportedRevitVersions>2022;2023;2024;2025;2026;2027</BrandSupportedRevitVersions>
 
     <!-- The add-in project folder; the engine derives the built DLL path from it. -->
     <BrandProjectDir>$(MSBuildThisFileDirectory)Ceiling Attach\</BrandProjectDir>
@@ -56,6 +56,7 @@
     <BrandAddinComponent Include="2024"><Guid>5960503E-3A0B-404C-8A9E-02A6546BF0B7</Guid></BrandAddinComponent>
     <BrandAddinComponent Include="2025"><Guid>86FCF0E2-C71B-490D-ABB2-EAF18358680D</Guid></BrandAddinComponent>
     <BrandAddinComponent Include="2026"><Guid>2A22EDBD-3B68-446A-90F5-43A700BE2B51</Guid></BrandAddinComponent>
+    <BrandAddinComponent Include="2027"><Guid>4BB95546-3D98-447D-BA3B-8B56E9E211FE</Guid></BrandAddinComponent>
   </ItemGroup>
 
   <!-- ================================================================= -->
@@ -76,6 +77,7 @@
     <BrandAddinComponent Include="2024"><Guid>002B1DBE-5155-4A3B-9FCE-A0E24499C4BE</Guid></BrandAddinComponent>
     <BrandAddinComponent Include="2025"><Guid>49381235-E5F3-43AD-8FE2-7DA84DE97196</Guid></BrandAddinComponent>
     <BrandAddinComponent Include="2026"><Guid>16B5166D-F38F-450A-A914-5E641DC504A3</Guid></BrandAddinComponent>
+    <BrandAddinComponent Include="2027"><Guid>83AA8EA8-5CFB-4CFD-A983-7F39CA287C05</Guid></BrandAddinComponent>
   </ItemGroup>
 
 </Project>

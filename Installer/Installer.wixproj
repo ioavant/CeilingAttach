@@ -15,8 +15,13 @@
     <OutputType>Package</OutputType>
     <!-- ICE61 fires because MajorUpgrade/@AllowSameVersionUpgrades makes the
          upgrade range overlap this product's own version. That overlap is the
-         point — see the comment in Product.wxs. -->
-    <SuppressIces>ICE61</SuppressIces>
+         point — see the comment in Product.wxs.
+         ICE80 fires because the Revit 2027 addin manifest lives under
+         ProgramFiles64Folder (64-bit directory) while the package platform is
+         x86. The manifest is a plain text file — Win64="yes" on the component
+         is the correct declaration, and the package platform stays x86 since
+         everything else (the DLL install path, all other manifests) is 32-bit. -->
+    <SuppressIces>ICE61;ICE80</SuppressIces>
     <DefineSolutionProperties>false</DefineSolutionProperties>
   </PropertyGroup>
   <!-- Brand-scoped so both MSIs can be built back to back. -->
