@@ -61,6 +61,14 @@
 						<Component Id="CoreFiles" Guid="$(var.CoreFilesGuid)">
 							<File Id="MainDll" Source="$(var.MainDllPath)"/>
 						</Component>
+						<?if $(var.HasNet8) = "1" ?>
+						<!-- net8.0-windows build for Revit 2025+; the 2025+ manifests point here. -->
+						<Directory Id="NET8DIR" Name="net8">
+							<Component Id="CoreFilesNet8" Guid="*">
+								<File Id="MainDllNet8" Source="$(var.MainDllNet8Path)"/>
+							</Component>
+						</Directory>
+						<?endif?>
 					</Directory>
 				</Directory>
 
@@ -136,6 +144,9 @@
 			 Display="expand">
 
 			<ComponentRef Id="CoreFiles"/>
+			<?if $(var.HasNet8) = "1" ?>
+			<ComponentRef Id="CoreFilesNet8"/>
+			<?endif?>
 
 			<Feature Id="Revit2022Feature"
 	                 Title="Revit 2022"

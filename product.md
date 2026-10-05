@@ -10,8 +10,8 @@
 | Product name | Ceiling Attach |
 | Publisher | Vixeldorf |
 | Category | MEP (Mechanical, Electrical, Plumbing) |
-| Current version | 1.0.0.0 |
-| Supported Revit versions | 2022 · 2023 · 2024 · 2025 · 2026 |
+| Current version | 1.1.0.0 |
+| Supported Revit versions | 2022 · 2023 · 2024 · 2025 · 2026 · 2027 |
 | Help / website URL | https://www.vixeldorf.com |
 | Support email | yoav@vixeldorf.com |
 | Support SLA | 5 business days |
@@ -41,7 +41,7 @@ The add-in casts a vertical ray upward from each selected element. It finds the 
 - Supports both **Floor slabs** and **Roof slabs** as target surfaces
 - Finds ceiling geometry in **Revit-linked models** automatically
 - Processes **multiple elements and Spaces** in one operation
-- **Configurable gap** — exact clearance from the ceiling underside (mm)
+- **Configurable gap** — exact clearance from the ceiling underside, in the project's length units
 - **Configurable search height** — limits how far above to scan, preventing false matches from upper floors
 - **Selection filter** — only model elements are pickable; annotations, detail lines, and model lines are excluded automatically
 - **Per-element result report** — shows direction and distance moved for each element, and lists any that had no ceiling found within range
@@ -51,15 +51,24 @@ The add-in casts a vertical ray upward from each selected element. It finds the 
 ## Step-by-step usage
 
 1. Open a Revit project containing MEP elements or Spaces to snap to the ceiling.
-2. *Optional* — click the arrow under the "Attach To Ceiling" button → **Settings** to set gap and search height (both in mm).
+2. *Optional* — click the arrow under the "Attach To Ceiling" button → **Settings** to set gap and search height (both in the project's length units).
 3. Select the elements or Spaces to attach (multi-select supported; annotations are excluded automatically).
 4. Click **Attach To Ceiling** on the **Vixeldorf** tab → **Ceiling Attach** panel.
-5. A results dialog lists every element moved (direction + distance in mm) and any that were skipped.
+5. A results dialog lists every element moved (direction + distance in project units) and any that were skipped.
 6. **Ctrl+Z** undoes everything at once.
 
 ---
 
 ## Version history
+
+### 1.1.0.0
+- Revit 2027 support
+- Separate .NET 8 build for Revit 2025 and later (Revit 2025.5 runs on .NET 10); Revit 2022–2024 keep the .NET Framework 4.8 build
+- Gap and search height are entered and shown in the project's length units
+- Spaces taller than the search height are searched up to their own height
+- Annotations, sections and other non-model elements are dropped from a pre-selection
+- Fixed: no floor found in projects whose floors are all in linked models
+- Success message closes after 1 second
 
 ### 1.0.0.0 — initial release
 - Attach MEP elements and Spaces to the nearest Floor or Roof above them

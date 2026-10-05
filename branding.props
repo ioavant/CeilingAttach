@@ -22,6 +22,8 @@
     <BrandAppClassName>CeilingAttach.App</BrandAppClassName>
 
     <BrandSupportedRevitVersions>2022;2023;2024;2025;2026;2027</BrandSupportedRevitVersions>
+    <!-- Revit 2025+ load the net8.0-windows assembly; 2022-2024 keep net48. -->
+    <BrandNet8MinRevitVersion>2025</BrandNet8MinRevitVersion>
 
     <!-- The add-in project folder; the engine derives the built DLL path from it. -->
     <BrandProjectDir>$(MSBuildThisFileDirectory)Ceiling Attach\</BrandProjectDir>
